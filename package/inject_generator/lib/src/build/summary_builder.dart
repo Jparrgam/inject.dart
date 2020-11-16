@@ -288,6 +288,7 @@ class _ProviderSummaryVisitor extends InjectClassVisitor {
         '${executableElement} and element return type ${returnTypeElement.kind}'
         '${returnTypeElement.runtimeType}');
     if (returnTypeElement.kind == ElementKind.DYNAMIC) {
+      builderContext.log.info(returnTypeElement, 'element is dynamic ${returnTypeElement.declaration.kind}');
       builderContext.log.severe(
         executableElement,
         'provider return type resolved to dynamic. This can happen when the '
