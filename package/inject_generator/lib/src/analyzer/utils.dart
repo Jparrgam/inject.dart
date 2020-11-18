@@ -11,8 +11,7 @@ import 'package:inject_generator/src/source/symbol_path.dart';
 
 /// Constructs a serializable path to [element].
 SymbolPath getSymbolPath(Element element) {
-  if (element is TypeDefiningElement && element.kind == ElementKind.DYNAMIC) {
-    builderContext.log.warning(element, '${element.kind} is dynamic object');
+  if (element is TypeDefiningElement && element.type.isDynamic) {
     throw new ArgumentError('Dynamic element type not supported. This is a '
         'package:inject bug. Please report it.');
   }
@@ -29,14 +28,14 @@ InjectedType getInjectedType(DartType type, {SymbolPath qualifier}) {
       builderContext.log.severe(
           type.element,
           'Only no-arg typedefs are supported, '
-          'and no-arg typedefs are treated as providers of the return type. ');
+              'and no-arg typedefs are treated as providers of the return type. ');
       throw new ArgumentError();
     }
     if (type.returnType.isDynamic) {
       builderContext.log.severe(
           type.element,
           'Cannot create a provider of type dynamic. '
-          'Your function type did not include a return type.');
+              'Your function type did not include a return type.');
       throw new ArgumentError();
     }
     return new InjectedType(
@@ -108,9 +107,9 @@ bool isSingletonClass(ClassElement clazz) {
       builderContext.log.severe(
           clazz,
           'A class cannot be annotated with `@singleton` '
-          'without also being annotated `@provide`. '
-          'Did you forget to add an `@provide` annotation '
-          'to class ${clazz.name}?');
+              'without also being annotated `@provide`. '
+              'Did you forget to add an `@provide` annotation '
+              'to class ${clazz.name}?');
     }
   }
   for (var constructor in clazz.constructors) {
@@ -121,9 +120,9 @@ bool isSingletonClass(ClassElement clazz) {
         builderContext.log.severe(
             constructor,
             'A constructor cannot be annotated with `@Singleton()` '
-            'without also being annotated `@Provide()`. '
-            'Did you forget to add an `@Provide()` annotation '
-            'to the constructor ${constructor.name}?');
+                'without also being annotated `@Provide()`. '
+                'Did you forget to add an `@Provide()` annotation '
+                'to the constructor ${constructor.name}?');
       }
     }
   }

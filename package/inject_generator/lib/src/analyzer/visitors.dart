@@ -117,7 +117,7 @@ class _LibraryVisitor extends RecursiveElementVisitor<Null> {
 List<SymbolPath> _extractModules(ClassElement clazz) {
   ElementAnnotation annotation = getInjectorAnnotation(clazz);
   List<DartObject> modules =
-      annotation.computeConstantValue().getField('modules').toListValue();
+  annotation.constantValue.getField('modules').toListValue();
   if (modules == null) {
     return const <SymbolPath>[];
   }
@@ -140,7 +140,7 @@ abstract class InjectClassVisitor {
 
   /// Call to start visiting [clazz].
   void visitClass(ClassElement clazz) {
-    for (var supertype in clazz.allSupertypes.where((t) => !t.isDartCoreObject)) {
+    for (var supertype in clazz.allSupertypes.where((t) => !t.isObject)) {
       new _AnnotatedClassVisitor(this).visitClassElement(supertype.element);
     }
     new _AnnotatedClassVisitor(this).visitClassElement(clazz);
@@ -157,11 +157,11 @@ abstract class InjectClassVisitor {
   /// [qualifier] is non-null when the method is also annotated with
   /// an annotation created by `const Qualifier(...)`.
   void visitProvideMethod(
-    MethodElement method,
-    bool singleton,
-    bool asynchronous, {
-    SymbolPath qualifier,
-  });
+      MethodElement method,
+      bool singleton,
+      bool asynchronous, {
+        SymbolPath qualifier,
+      });
 
   /// Called when a getter is annotated with `@provide`.
   ///
@@ -177,7 +177,7 @@ class _AnnotatedClassVisitor extends GeneralizingElementVisitor<Null> {
 
   bool _isProvider(ExecutableElement element) =>
       hasProvideAnnotation(element) ||
-      (_classVisitor._isForInjector && element.isAbstract);
+          (_classVisitor._isForInjector && element.isAbstract);
 
   @override
   Null visitMethodElement(MethodElement method) {
